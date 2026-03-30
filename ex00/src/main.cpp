@@ -13,8 +13,10 @@ int main(int ac, char* av[]) {
 			exc.loadDictionnary("data.csv");	
 		} catch (BitcoinExchange::ParsingException &e) {
 			std::cout << e.what() << std::endl;
+			return 1;
 		}
-		std::cout << exc << std::endl;
+		exc.loadFile(inFile);
+		// std::cout << exc << std::endl;
 	}
 	else {
 		std::cout << "Usage: ./btc <filename>" << std::endl;

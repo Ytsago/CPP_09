@@ -53,7 +53,7 @@ void	checkValideDate(const std::string& date) {
 	if (year == -1 || month == -1 || day == -1 || !iss.eof())
 		throw BitcoinExchange::ParsingException("Wrong date value");
 
-	if (year < 2009 || (year == 2009 && month == JANUARY && day < 2) || year > 9999 || day > 31 || month > 12)
+	if (year < 2009 || (year == 2009 && month == JANUARY && day < 2) || year > 9999 || day > 31 || month > 12 || day < 1 || month < 1)
 		throw BitcoinExchange::ParsingException("Wrong date time");
 
 	if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)
@@ -88,25 +88,40 @@ void	BitcoinExchange::loadDictionnary(const char* dicName) {
 }
 
 void	BitcoinExchange::loadFile(std::ifstream& file) {
-	std::string	date, sep, line;
+	std::string	date, sep;
 	float		value;
-	std::stringstream	iss;
 
 	while(!file.eof()) {
-		file >> line;
-		iss << line;
-		iss >> date >> sep >> value;
-		if (iss.fail() || !iss.eof()) {
-			std::cout << "Error wrong line format" << std::endl;
-			continue;
+		size_t pos;
+
+		date.clear(), sep.clear(), value = 0;
+		file >> date >> sep >> value;
+		if (file.eof())
+			return ;
+		if (file.fail()) {
+			std::cout << "You suck bro" << std::endl;
+			return ;
 		}
-		if (date.empty() || sep.empty() || sep != "|" || value < 0) {
+		if ((pos = date.find_last_of(',')) != date.npos)
+			date.erase(pos);
+		if (date.empty() || sep.empty() || sep != "|" || value < 0 || value > 1000) {
 			std::cout << "Error wrong line format" << std::endl;
 			continue;
 		}
 		try {checkValideDate(date);} catch (BitcoinExchange::ParsingException &e) {
+			std::cout << date << " - ";
 			std::cout << e.what() << std::endl;
 			continue;
+		}
+		std::map<std::string, float>::iterator it = _dico.lower_bound(date);
+
+		if (it != _dico.end()) {
+			std::cout << date;
+			std::cout << " - Conversion: " << value * it->second << std::endl;
+		}
+		else {
+			std::cout << date;
+			std::cout << " - Conversion: " << value * _dico.rbegin()->second << std::endl;
 		}
 	}
 }
