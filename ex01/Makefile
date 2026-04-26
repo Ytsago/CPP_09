@@ -1,6 +1,6 @@
 # -----------RULES-----------#
 
-CFLAGS = -Wall -Wextra -Werror -MMD -MP -std=c++98
+CFLAGS = -Wall -Wextra -Werror -MMD -MP -std=c++98 -Weverything
 CC = c++
 AR = ar
 ARFLAG = -rcs
@@ -17,9 +17,9 @@ OBJDIR = .Obj/
 
 MAIN =	main.cpp
 
-CLASS = Span.cpp 
+CLASS = RPN.cpp
 
-INC = Span.hpp
+INC = RPN.hpp
 
 # -----------SRCS-----------#
 
@@ -36,7 +36,7 @@ HEADER = $(addprefix $(INCDIR), $(INC))
 
 LIBS =	
 
-NAME = Span
+NAME = RPN
 
 # -----------RULES-----------#
 

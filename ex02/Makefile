@@ -17,9 +17,9 @@ OBJDIR = .Obj/
 
 MAIN =	main.cpp
 
-CLASS = Span.cpp 
+CLASS = PmergeMe.cpp
 
-INC = Span.hpp
+INC = PmergeMe.hpp
 
 # -----------SRCS-----------#
 
@@ -36,7 +36,7 @@ HEADER = $(addprefix $(INCDIR), $(INC))
 
 LIBS =	
 
-NAME = Span
+NAME = PmergeMe
 
 # -----------RULES-----------#
 

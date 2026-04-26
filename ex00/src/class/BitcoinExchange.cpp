@@ -54,7 +54,7 @@ void	checkValideDate(const std::string& date) {
 		throw BitcoinExchange::ParsingException("Wrong date value");
 
 	if (year < 2009 || (year == 2009 && month == JANUARY && day < 2) || year > 9999 || day > 31 || month > 12 || day < 1 || month < 1)
-		throw BitcoinExchange::ParsingException("Wrong date time");
+		throw BitcoinExchange::ParsingException("Date does not exist");
 
 	if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)
 		isBissextile = true;
@@ -96,16 +96,14 @@ void	BitcoinExchange::loadFile(std::ifstream& file) {
 
 		date.clear(), sep.clear(), value = 0;
 		file >> date >> sep >> value;
-		if (file.eof())
-			return ;
 		if (file.fail()) {
-			std::cout << "You suck bro" << std::endl;
+			std::cout << "Error\nSomething went wrong" << std::endl;
 			return ;
 		}
 		if ((pos = date.find_last_of(',')) != date.npos)
 			date.erase(pos);
 		if (date.empty() || sep.empty() || sep != "|" || value < 0 || value > 1000) {
-			std::cout << "Error wrong line format" << std::endl;
+			std::cout << "Error\nWrong line format" << std::endl;
 			continue;
 		}
 		try {checkValideDate(date);} catch (BitcoinExchange::ParsingException &e) {
