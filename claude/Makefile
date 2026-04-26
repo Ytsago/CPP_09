@@ -1,6 +1,6 @@
 # -----------RULES-----------#
 
-CFLAGS = -Wall -Wextra -Werror -MMD -MP -std=c++98 
+CFLAGS = -Wall -Wextra -Werror -MMD -MP -std=c++98
 CC = c++
 AR = ar
 ARFLAG = -rcs
@@ -17,9 +17,9 @@ OBJDIR = .Obj/
 
 MAIN =	main.cpp
 
-CLASS = 
+CLASS = PmergeMe.cpp
 
-INC = 
+INC = PmergeMe.hpp
 
 # -----------SRCS-----------#
 
