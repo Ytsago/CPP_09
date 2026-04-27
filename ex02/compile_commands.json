@@ -1,0 +1,21 @@
+[
+ {
+  "directory": "/home/secros/Documents/MIL5/CPP_09/ex02",
+  "arguments": [
+   "c++",
+   "-Wall",
+   "-Wextra",
+   "-Werror",
+   "-MMD",
+   "-MP",
+   "-std=c++98",
+   "-I",
+   "inc/",
+   "-c",
+   "src/main.cpp",
+   "-o",
+   ".Obj/main.o"
+  ],
+  "file": "src/main.cpp"
+ }
+]

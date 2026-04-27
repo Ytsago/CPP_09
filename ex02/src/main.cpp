@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 #include <sstream>
 #include <vector>
 #include <deque>
@@ -40,15 +41,15 @@ void	printLogs(const char start[], const char end[]) {
 bool	parseInput(char* const av[]) {
 	for (int i = 1; av[i]; i++) {
 		std::stringstream iss(av[i]);
-		int val;
+		long val;
 		
 		while (iss >> val) {
-			if (val < 0 || val > 10000) {
-				out << "Error.\nValue must be in range [0-10000]" << std::endl;
+			if (val < 0 || val > std::numeric_limits<int>::max()) {
+				out << "Error.\nValue must be in range [0-INTMAX]" << std::endl;
 				return 1;
 			}
-			vector.push_back(val);
-			deque.push_back(val);
+			vector.push_back(static_cast<int>(val));
+			deque.push_back(static_cast<int>(val));
 		}
 
 		if (!iss.eof()) {
