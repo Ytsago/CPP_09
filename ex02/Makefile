@@ -17,9 +17,9 @@ OBJDIR = .Obj/
 
 MAIN =	main.cpp
 
-CLASS = 
+CLASS = PmergeMe.cpp
 
-INC = 
+INC = PmergeMe.hpp
 
 # -----------SRCS-----------#
 
