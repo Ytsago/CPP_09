@@ -36,7 +36,7 @@ size_t	jacobsthal(size_t t) {
 		return 1;
 	a = 0;
 	b = 1;
-	for (size_t i = 0; i <= t; i++) {
+	for (size_t i = 2; i <= t; i++) {
 		c = b + 2 * a;
 		a = b, b = c;
 	}
@@ -78,18 +78,21 @@ void	PmergeMe::sort(std::vector<int>& main, size_t blockSize) {
 		sorted.insert(sorted.end(), main.begin() + *itMain, main.begin() + *itMain + blockSize);
 	}
 
+	size_t	currJ, lastJ;
+
+	lastJ = 1;
+	for (size_t t = 3; lastJ < pendChain.size(); t++) {
+		currJ = jacobsthal(t);
+		size_t	end = std::min(currJ, pendChain.size());
+		for (size_t i = end; i > lastJ; --i) {
+
+		}
+		lastJ = currJ;
+	}
+
 	main.swap(sorted);
 	sorted.clear();
-	// std::vector<std::vector<int> >	pend;
-	// std::vector<std::vector<int> >	mainChain;
-	//
-	// mainChain.push_back(extractBlock(main, 0, blockSize));
-	// mainChain.push_back(extractBlock(main, blockSize, blockSize));
-	//
-	// for (size_t i = blockSize *2; i + blockSize * 2 <= main.size(); i += blockSize * 2) {
-	// 	pend.push_back(extractBlock(main, i, blockSize));
-	// 	mainChain.push_back(extractBlock(main, i + blockSize, blockSize));
-	// }
+	std::deque<int> test;
 }
 
 // void	PmergeMe::sort(std::vector<int>& in);
