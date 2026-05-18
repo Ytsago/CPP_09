@@ -1,4 +1,26 @@
 #include "PmergeMe.hpp"
+#include <algorithm>
+
+struct Block {
+	size_t	id;
+	size_t	offset;
+	Block(size_t i, size_t of) : id(i), offset(of) {}
+};
+
+struct MatchId {
+	size_t	targetId;
+	MatchId(size_t id) : targetId(id) {}
+	bool	operator()(const Block& b) const {return b.id == targetId;}
+};
+
+struct	CompBlock {
+	const std::vector<int>&	mainRef;
+	const size_t	blockSize;
+	CompBlock(const std::vector<int>& main, size_t blockSize) : mainRef(main), blockSize(blockSize) {}
+	bool	operator()(const Block& a, const Block& b) const {
+		return mainRef[a.offset + blockSize -1] < mainRef[b.offset + blockSize -1];
+	}
+};
 
 PmergeMe::PmergeMe() {
 }
@@ -55,28 +77,24 @@ void	PmergeMe::sort(std::vector<int>& main, size_t blockSize) {
 
 	std::cout << main << std::endl;
 	sort(main, blockSize * 2);
-	std::vector<int> mainChain, pendChain;
+	std::vector<Block> mainChain, pendChain;
 
-	mainChain.push_back(0), mainChain.push_back(1 * blockSize);
+	mainChain.push_back(Block(0,0)), mainChain.push_back(Block(0, 1 * blockSize));
 	size_t	k;
 	size_t	nbBlock = main.size() / blockSize;
+	size_t	currentId = 1;
 
-	for (k = 2; k + 1 < nbBlock; k += 2) {
-		pendChain.push_back(k * blockSize);
-		mainChain.push_back((k + 1) * blockSize);
+	for (k = 2; k + 1 <= nbBlock -1; k += 2) {
+		pendChain.push_back(Block(currentId, k * blockSize));
+		mainChain.push_back(Block(currentId, (k + 1) * blockSize));
+		currentId++;
 	}
 	
 	if (nbBlock % 2 != 0)
-		pendChain.push_back((nbBlock - 1) * blockSize);
+		mainChain.push_back(Block(static_cast<size_t>(-1), (nbBlock - 1) * blockSize));
 
 	std::vector<int>	sorted;
 	sorted.reserve(main.size());
-
-	std::vector<int>::iterator itMain = mainChain.begin();
-
-	for (; itMain != mainChain.end(); itMain++) {
-		sorted.insert(sorted.end(), main.begin() + *itMain, main.begin() + *itMain + blockSize);
-	}
 
 	size_t	currJ, lastJ;
 
@@ -85,14 +103,28 @@ void	PmergeMe::sort(std::vector<int>& main, size_t blockSize) {
 		currJ = jacobsthal(t);
 		size_t	end = std::min(currJ, pendChain.size());
 		for (size_t i = end; i > lastJ; --i) {
-
+			std::vector<Block>::iterator searchEnd = mainChain.end();
+			Block toInsert = pendChain[i - 1];
+			if (toInsert.id != static_cast<size_t>(-1)) {
+				searchEnd = std::find_if(mainChain.begin(), mainChain.end(), MatchId(toInsert.id));
+				if (searchEnd != mainChain.end())
+					searchEnd += 1;
+			}
+			std::vector<Block>::iterator binaryInsert = std::lower_bound(mainChain.begin(), searchEnd, toInsert, CompBlock(main, blockSize));
+			mainChain.insert(binaryInsert, toInsert);
 		}
 		lastJ = currJ;
 	}
 
+	for (size_t i = 0; i < mainChain.size(); i++) {
+		sorted.insert(sorted.end(), main.begin() + mainChain[i].offset, main.begin() + mainChain[i].offset + blockSize);
+	}
+
+	if (nbBlock * blockSize < main.size()) {
+		sorted.insert(sorted.end(), main.begin() + nbBlock * blockSize, main.end());
+	}
+
 	main.swap(sorted);
-	sorted.clear();
-	std::deque<int> test;
 }
 
 // void	PmergeMe::sort(std::vector<int>& in);
