@@ -5,7 +5,6 @@
 #include <sstream>
 #include <vector>
 #include <deque>
-#include <algorithm>
 
 std::ostream&	out = std::cout;
 
