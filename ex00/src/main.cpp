@@ -13,6 +13,7 @@ int main(int ac, char* av[]) {
 			exc.loadDictionnary("data.csv");	
 		} catch (BitcoinExchange::ParsingException &e) {
 			std::cout << e.what() << std::endl;
+			std::cout << "CSV malformated quiting..." << std::endl;
 			return 1;
 		}
 		exc.loadFile(inFile);

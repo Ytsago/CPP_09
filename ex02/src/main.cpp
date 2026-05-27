@@ -9,8 +9,6 @@
 std::ostream&	out = std::cout;
 
 enum	e_time {
-	HOUR,
-	MINUTE,
 	SECOND,
 	MILI,
 	MICRO,
@@ -77,17 +75,13 @@ bool	parseInput(char* const av[], std::vector<int>& vector) {
 
 void	printTime(const std::clock_t& start, const std::clock_t& end) {
 	double timeDif = static_cast<double>(end - start) / CLOCKS_PER_SEC;
-	std::string	unitStr[] = {"h", "mn", "sec", "ms", "µs", "ns"};
+	std::string	unitStr[] = {"sec", "ms", "µs", "ns"};
 	int	unit = SECOND;
 
 	while (timeDif < 1 || timeDif > 1000) {
 		if (timeDif < 1 && unit < NANO) {
 			timeDif *= 1000;
 			++unit;
-		}
-		if (timeDif > 1000 && unit > HOUR) {
-			timeDif /= 1000;
-			--unit;
 		}
 	}
 

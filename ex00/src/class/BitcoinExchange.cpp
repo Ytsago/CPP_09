@@ -87,18 +87,38 @@ void	BitcoinExchange::loadDictionnary(const char* dicName) {
 	}
 }
 
+ bool	parseHeader(std::ifstream& file) {
+	std::string date, value, line;
+	std::stringstream	iss;
+	char	sep;
+
+	std::getline(file, line);
+	iss << line;
+	iss >> date >> sep >> value;
+	if (date != "Date" || sep != '|' || value != "Value")
+		return 1;
+	return 0;
+}
+
 void	BitcoinExchange::loadFile(std::ifstream& file) {
+	std::string	line;
 	std::string	date, sep;
 	float		value;
 
-	while(!file.eof()) {
+	if (parseHeader(file)) {
+		std::cout << "Wrong header format: \'Date | Value'" << std::endl;
+		return ;
+	}
+
+	while(std::getline(file, line)) {
+		std::stringstream iss(line);
 		size_t pos;
 
 		date.clear(), sep.clear(), value = 0;
-		file >> date >> sep >> value;
-		if (file.fail()) {
+		iss >> date >> sep >> value;
+		if (iss.fail()) {
 			std::cout << "Error\nSomething went wrong" << std::endl;
-			return ;
+			continue ;
 		}
 		if ((pos = date.find_last_of(',')) != date.npos)
 			date.erase(pos);
